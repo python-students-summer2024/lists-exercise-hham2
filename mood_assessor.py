@@ -14,7 +14,7 @@ def write_to_file(info):
     """
     @param Info what you want to append to the file
     """
-    filepath = Path("data\mood_diary.txt")
+    filepath = Path(r"data\mood_diary.txt")
     file = open(filepath, encoding = "utf-8", mode = "a")
     if responded_today() is False:
         file.write(f"{info} {date()}\n")
@@ -69,9 +69,9 @@ def read_lines():
     """
     @return Returns a list, where each element corresponds to a line in the file being read
     """
-    filepath = Path("data\mood_diary.txt")
+    filepath = Path(r"data\mood_diary.txt")
     file = open(filepath, encoding = "utf-8", mode = "r")
-    lines = file.readlines()
+    lines = file.readlines()[:-8:-1] #without the [:-8:-1] here specifically, the program sometimes won't take mood integers from only the last seven days; haven't figured out why
     return lines
 
 
@@ -82,7 +82,7 @@ def diagnose_disorders():
     """
     if len(read_lines()) < 7:
         return None
-    lines = read_lines()[:-8:-1]
+    lines = read_lines()
     new_lines = []
     for i in lines:
         i = i[0:2]
@@ -90,7 +90,7 @@ def diagnose_disorders():
         new_lines = new_lines[:-8:-1]
     formatted_lines = []
     for i in new_lines:
-        i = int(str(i).strip())
+        i = str(i).strip()
         formatted_lines.append(i)
     average_mood = find_average_mood(formatted_lines)
     mood_integer_list = first_column_mood_diary()
@@ -111,7 +111,7 @@ def find_average_mood(new_lines):
     total = 0
     for i in new_lines:
         total += int(i)
-    average = round(total / 7)
+    average = int(total / 7)
     mood_options = ["happy","relaxed","apathetic","sad","angry"]
     formatted_mood_options = []
     for index, mood in enumerate(mood_options):
@@ -132,7 +132,7 @@ def first_column_mood_diary():
         unformatted_first_column.append(line[0:2])
         unformatted_first_column = unformatted_first_column[:-8:-1]
     for i in unformatted_first_column:
-        i = (str(i).strip())
+        i = str(i).strip()
         formatted_first_column.append(i)
     return formatted_first_column
 
